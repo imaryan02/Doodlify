@@ -8,6 +8,8 @@ function App() {
   const canvasRef = useRef<CanvasSectionRef>(null);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  // State to track mobile navbar toggle
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Track cursor for custom glow effects
   useEffect(() => {
@@ -51,13 +53,14 @@ function App() {
         ></div>
       )}
 
-      {/* Header with Neon Effect */}
-      <header className="w-full flex items-center justify-between px-6 py-4 relative z-10 border-b border-indigo-900/20 backdrop-blur-sm bg-gray-900/80">
+      {/* Fixed Header with Responsive Navbar */}
+      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-gray-900/80 border-b border-indigo-900/20 backdrop-blur-sm">
         <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-400 to-cyan-400 animate-text">
           Doodlify
           <span className="inline-block ml-1 text-sm text-cyan-400">✧</span>
         </h1>
-        <nav className="space-x-4">
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex space-x-4">
           <button className="relative overflow-hidden group px-5 py-2 rounded-xl bg-gray-800 text-gray-300 border border-indigo-900/40 text-sm font-medium">
             <span className="relative z-10">Login</span>
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-indigo-900/40 to-purple-900/40 transition-opacity duration-300"></div>
@@ -69,28 +72,66 @@ function App() {
             <span className="relative z-10 text-white">Join Free</span>
           </button>
         </nav>
+        {/* Mobile Hamburger Button */}
+        <div className="md:hidden">
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="text-gray-300 focus:outline-none"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              {isMobileMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+        </div>
+
+        {/* Mobile Navigation Dropdown */}
+        {isMobileMenuOpen && (
+          <nav className="absolute top-full left-0 w-full bg-gray-900 border-b border-indigo-900/20 py-2 flex flex-col items-center md:hidden">
+            <button
+              className="w-full text-left px-6 py-2 hover:bg-gray-800"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Login
+            </button>
+            <button
+              className="w-full text-left px-6 py-2 hover:bg-gray-800"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Join Free
+            </button>
+          </nav>
+        )}
       </header>
 
       {/* Hero Section */}
-      <main className="flex flex-col items-center text-center mt-8 md:mt-16 px-4 relative z-10">
+      {/* Added padding-top to avoid overlapping with fixed header */}
+      <main className="pt-20 flex flex-col items-center text-center mt-8 md:mt-16 px-4 relative z-10">
         <div className="relative">
           <h2 className="text-4xl md:text-6xl font-extrabold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-400 to-cyan-400">
-            Where <span className="text-pink-400">Creativity</span> Meets <span className="text-cyan-400">Chaos</span>{" "}
+            Where <span className="text-pink-400">Creativity</span> Meets <span className="text-cyan-400">Chaos</span>
           </h2>
-          {/* <div className="absolute -top-14 -right-12 text-5xl animate-bounce md:text-7xl">💥</div> */}
-          <div className="absolute -top-6 -right-5  text-5xl animate-bounce md:-top-14 md:-right-14 md:text-7xl">
-  💥
-</div>
-
+          <div className="absolute -top-6 -right-5 text-5xl animate-bounce md:-top-14 md:-right-14 md:text-7xl">
+            💥
+          </div>
           <div className="absolute -bottom-4 -left-4 w-20 h-1 bg-gradient-to-r from-pink-500 to-purple-600"></div>
           <div className="absolute -bottom-4 -right-4 w-20 h-1 bg-gradient-to-r from-purple-600 to-cyan-500"></div>
         </div>
-        
         <p className="text-base md:text-lg mt-8 text-gray-400 max-w-2xl">
           A Gen-Z playground to draw, doodle, express &amp; surprise yourself
-          <span className="block mt-1 text-sm text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">— no rules, just vibes.</span>
+          <span className="block mt-1 text-sm text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">
+            — no rules, just vibes.
+          </span>
         </p>
-        
         <div className="mt-12 relative group">
           <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 to-indigo-600 rounded-xl blur opacity-30 group-hover:opacity-80 transition duration-300"></div>
           <button
